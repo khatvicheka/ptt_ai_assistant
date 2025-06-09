@@ -278,6 +278,28 @@ function displayCurrentSlide(backgroundColor, textColor, fontSize) {
   previewContainer.appendChild(slideWrapper);
 }
 
+// Toggle Customization Section - Hidden by default
+const toggleCustomization = document.getElementById('toggle-customization');
+const customizationSection = document.getElementById('customization-section');
+const toggleIcon = document.getElementById('toggle-icon');
+const toggleText = document.getElementById('toggle-text');
+
+let isCustomizationVisible = false; // Changed to false (hidden by default)
+
+toggleCustomization.addEventListener('click', () => {
+  isCustomizationVisible = !isCustomizationVisible;
+  
+  if (isCustomizationVisible) {
+    customizationSection.classList.remove('collapsed');
+    toggleIcon.classList.replace('fa-chevron-down', 'fa-chevron-up');
+    toggleText.textContent = 'លាក់';
+  } else {
+    customizationSection.classList.add('collapsed');
+    toggleIcon.classList.replace('fa-chevron-up', 'fa-chevron-down');
+    toggleText.textContent = 'បង្ហាញ';
+  }
+});
+
 // Add event listeners for customization controls
 // Add event listeners with null checks
 const bgColorEl = document.getElementById("bg-color");
