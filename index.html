@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="km">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title> AI ជំនួយការ PTT</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+     <script src="https://cdn.jsdelivr.net/gh/gitbrent/pptxgenjs/dist/pptxgen.bundle.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Koulen&family=Moul&family=Noto+Serif+Khmer:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./css/app.css">
+  </head>
+  <body class="bg-gray-100 text-gray-800">
+    <div id="loading-overlay" class="hidden">
+        <div class="spinner"></div>
+        <p id="loading-text">កំពុងដំណើរការ...</p>
+    </div>
+
+    <div id="notification"></div>
+
+    <div class="container mx-auto p-4 md:p-8">
+      <header class="text-center mb-8">
+        <h4 class="text-3xl md:text-4xl font-moul text-blue-600">
+          AI ជំនួយការ PTT
+        <!-- <p class="text-lg text-gray-600 mt-2">
+          កម្មវិធីដ៏ឆ្លាតវៃសម្រាប់រៀបចំ ចម្រៀងនិងបទគម្ពីរ
+        </p> -->
+      </header>
+
+      <main class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Left Side: Input & Editor -->
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+          <h2 class="text-2xl font-koulen border-b-2 border-blue-500 pb-2 mb-4">
+            ជំហានទី១៖ បញ្ចូលអត្ថបទ
+          </h2>
+
+          <div class="border-b border-gray-200 mb-4">
+            <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+              <button
+                class="tab-btn active whitespace-nowrap py-3 px-4 border-b-2 font-medium text-base"
+                data-tab="image"
+              >
+                <i class="fas fa-image mr-2"></i>ពី​រូបភាព
+              </button>
+              <button
+                class="tab-btn whitespace-nowrap py-3 px-4 border-b-2 font-medium text-base"
+                data-tab="audio"
+              >
+                <i class="fas fa-microphone-alt mr-2"></i>ពី​សំឡេង
+              </button>
+              <button
+                class="tab-btn whitespace-nowrap py-3 px-4 border-b-2 font-medium text-base"
+                data-tab="youtube"
+              >
+                <i class="fas fa-spell-check mr-2"></i>ពិនិត្យ​ ​អក្ខរាវិរុទ្ធ
+              </button>
+            </nav>
+          </div>
+
+          <div id="tab-contents">
+            <div id="tab-image" class="tab-content active">
+             <p class="text-base text-gray-600 mb-2">
+                ជ្រើសរើសរូបភាពដែលមានអត្ថបទ (ចម្រៀង, បទគម្ពីរ)។
+              </p>
+              <input
+                type="file"
+                id="image-input"
+                accept="image/*"
+                class="block w-full text-base text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-base file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+              />
+              <button
+                id="image-process-btn"
+                class="mt-3 w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300"
+              >
+                <i class="fas fa-cogs mr-2"></i>ចាប់ផ្តើមទាញយកអត្ថបទ
+              </button>
+            </div>
+            <div id="tab-audio" class="tab-content">
+              <p class="text-base text-gray-600 mb-2">
+                ចុចប៊ូតុងខាងក្រោម ហើយចាប់ផ្តើមនិយាយ ឬចាក់ចម្រៀង។
+              </p>
+              <button
+                id="audio-btn"
+                class="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-4 rounded-lg transition duration-300 flex items-center justify-center"
+              >
+                <i id="audio-icon" class="fas fa-microphone-alt text-2xl"></i>
+               <span id="audio-text" class="ml-3 text-xl">ចាប់ផ្តើមថតសំឡេង</span
+                >
+              </button>
+              <p
+                id="audio-status"
+                class="text-center mt-2 text-base text-gray-500"
+              ></p>
+            </div>
+            <div id="tab-youtube" class="tab-content">
+              <p class="text-base text-gray-600 mb-2">
+                បិទភ្ជាប់តំណភ្ជាប់ YouTube វីដេអូចម្រៀង។
+              </p>
+              <input
+                type="text"
+                id="youtube-link"
+                placeholder="https://www.youtube.com/watch?v=..."
+                class="w-full p-2 border border-gray-300 rounded-lg"
+              />
+              <button
+                disabled
+                class="mt-3 w-full bg-gray-400 text-white font-bold py-2 px-4 rounded-lg cursor-not-allowed"
+              >
+                <i class="fas fa-cogs mr-2"></i>ទាញយក (មុខងារនេះនឹងមានឆាប់ៗនេះ)
+              </button>
+              <p class="text-base text-center mt-2 text-gray-500">
+                ដោយសារបញ្ហាបច្ចេកទេស មុខងារនេះមិនទាន់អាចប្រើបានទេ។
+              </p>
+            </div>
+          </div>
+
+          <hr class="my-6" />
+
+          <h2 class="text-2xl font-koulen border-b-2 border-blue-500 pb-2 mb-4">
+            ជំហានទី២៖ កែសម្រួល និងពិនិត្យ
+          </h2>
+         <p class="text-base text-gray-600 mb-2">
+            កែសម្រួលអត្ថបទតាមស្លាយនីមួយៗ។ សម្រាប់បំបែកស្លាយថ្មី សូមចុច Enter
+            ពីរដង។
+          </p>
+          <textarea
+            id="editor"
+            rows="15"
+            class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+            placeholder="អត្ថបទដែលបានទាញយកនឹងបង្ហាញនៅទីនេះ..."
+          ></textarea>
+         <div class="flex gap-2 mt-3">
+            <button
+              id="spell-check-btn"
+              class="flex-1 bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300"
+            >
+              <i class="fas fa-rocket mr-2"></i>បង្កើត PTT
+            </button>
+            <button
+              id="clear-btn"
+              class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300"
+            >
+              <i class="fas fa-trash mr-2"></i>សម្អាត
+            </button>
+          </div>
+        </div>
+
+        <!-- Right Side: Preview & Download -->
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+          <h2 class="text-2xl font-koulen border-b-2 border-blue-500 pb-2 mb-4">
+            ជំហានទី៣៖ កំណត់រូបរាង និងទាញយក
+          </h2>
+          
+          <!-- Customization Controls -->
+      
+           <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-base font-medium text-gray-700 mb-1">ពុម្ពអក្សរ</label>
+                <select id="font-family" class="w-full p-2 border border-gray-300 rounded">
+                  <option value="Khmer OS Battambang">Khmer OS Battambang</option>
+                  <option value="Koulen">Koulen</option>
+                  <option value="Moul">Moul</option>
+                  <option value="Noto Serif Khmer">Noto Serif Khmer</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-base font-medium text-gray-700 mb-1">ទំហំអក្សរ PTT</label>
+                <select id="ppt-font-size" class="w-full p-2 border border-gray-300 rounded">
+                  <option value="18">តូច (18pt)</option>
+                  <option value="24" selected>មធ្យម (24pt)</option>
+                  <option value="32">ធំ (32pt)</option>
+                  <option value="48">ធំបំផុត (48pt)</option>
+                </select>
+              </div>
+            </div>
+          <div class="space-y-4 mb-6">
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+               <label class="block text-base font-medium text-gray-700 mb-1">ពណ៌ផ្ទៃខាងក្រោយ</label>
+                <input type="color" id="bg-color" value="#ffffff" class="w-full h-10 rounded border border-gray-300">
+              </div>
+              <div>
+                <label class="block text-base font-medium text-gray-700 mb-1">ពណ៌អក្សរ</label>
+                <input type="color" id="text-color" value="#000000" class="w-full h-10 rounded border border-gray-300">
+              </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-base font-medium text-gray-700 mb-1">ទំហំអក្សរ</label>
+                <select id="font-size" class="w-full p-2 border border-gray-300 rounded">
+                  <!-- <option value="1.2rem">តូច</option>
+                  <option value="1.5rem" selected>មធ្យម</option>
+                  <option value="1.8rem">ធំ</option>
+                  <option value="2.2rem">ធំបំផុត</option> -->
+                  <option value="20">តូច (20pt)</option>
+                  <option value="24" selected>មធ្យម (24pt)</option>
+                  <option value="32">ធំ (32pt)</option>
+                  <option value="40">ធំបំផុត (40pt)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-base font-medium text-gray-700 mb-1">ខ្សែក្នុងមួយស្លាយ</label>
+                <select id="lines-per-slide" class="w-full p-2 border border-gray-300 rounded">
+                  <option value="1">១ខ្សែ</option>
+                  <option value="2" selected>២ខ្សែ</option>
+                  <option value="3">៣ខ្សែ</option>
+                  <option value="4">៤ខ្សែ</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-base font-medium text-gray-700 mb-1">គម្លាតខ្សែ</label>
+                <select id="line-spacing" class="w-full p-2 border border-gray-300 rounded">
+                  <option value="1.0">1.0</option>
+                  <option value="1.5" selected>1.5</option>
+                   <option value="2.0" selected>2.0</option>
+                  <option value="2.5">2.5</option>
+                  <option value="3.0">3.0</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          
+          <div id="preview-container" class="space-y-4 mb-6">
+            <p class="text-center text-gray-500 py-16">
+              ផ្ទាំងមើលស្លាយនឹងបង្ហាញនៅទីនេះ...
+            </p>
+          </div>
+          
+          <button
+            id="download-btn"
+            class="w-full bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300"
+          >
+            <i class="fas fa-download mr-2"></i>ទាញយកជា PowerPoint (.pptx)
+          </button>
+        </div>
+      </main>
+    </div>
+
+    <!-- Floating About Button -->
+    <button id="about-btn" class="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-110 z-50">
+      <i class="fas fa-info text-xl"></i>
+    </button>
+
+    <!-- About Popup Modal -->
+    <div id="about-modal" class="fixed inset-0 bg-black bg-opacity-50 z-[9999] hidden items-center justify-center p-4">
+      <div class="bg-white rounded-lg max-w-md w-full max-h-[80vh] overflow-y-auto relative">
+        <!-- Close Button -->
+        <button id="close-about" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl">
+          <i class="fas fa-times"></i>
+        </button>
+        
+        <!-- Modal Content -->
+        <div class="p-6">
+          <div class="text-center mb-6">
+            <i class="fas fa-magic text-4xl text-blue-600 mb-4"></i>
+            <h2 class="text-2xl font-moul text-blue-600 mb-2">AI ជំនួយការ PTT</h2>
+            <p class="text-gray-600">កម្មវិធីដ៏ឆ្លាតវៃសម្រាប់រៀបចំចម្រៀងនិងបទគម្ពីរ</p>
+          </div>
+          
+          <div class="space-y-4 text-sm">
+            <div>
+              <h3 class="font-bold text-gray-800 mb-2">🎯 មុខងារសំខាន់ៗ:</h3>
+              <ul class="list-disc list-inside text-gray-700 space-y-1">
+                <li>ទាញយកអត្ថបទពីរូបភាព</li>
+                <li>ថតសំឡេងបំលែងជាអត្ថបទ</li>
+                <li>បង្កើត PowerPoint ស្វ័យប្រវត្តិ</li>
+                <li>កែសម្រួលស្លាយងាយស្រួល</li>
+              </ul>
+            </div>
+            
+            <div>
+              <h3 class="font-bold text-gray-800 mb-2">💡 របៀបប្រើប្រាស់:</h3>
+              <ol class="list-decimal list-inside text-gray-700 space-y-1">
+                <li>ជ្រើសរើសវិធីបញ្ចូលអត្ថបទ</li>
+                <li>ចុច "បង្កើត PTT" ដើម្បីរៀបចំ</li>
+                <li>កំណត់រូបរាងតាមចំណូលចិត្ត</li>
+                <li>ទាញយកជា PowerPoint</li>
+              </ol>
+            </div>
+            
+            <div>
+              <h3 class="font-bold text-gray-800 mb-2">🚀 បច្ចេកវិទ្យា:</h3>
+              <p class="text-gray-700">ប្រើប្រាស់ Google Gemini AI ដើម្បីដំណើរការអត្ថបទ និងបង្កើតបទបង្ហាញដ៏ល្អឥតខ្ចោះ។</p>
+            </div>
+            
+            <div class="border-t pt-4 mt-6">
+              <p class="text-center text-gray-600 text-xs">
+                កំណែ 1.0 | © 2025<br>
+                <span class="text-blue-600">រៀបចំដោយ : ខាត់ វិច្ឆិកា</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="./js/app.js"></script>
+  </body>
+</html>

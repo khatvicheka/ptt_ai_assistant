@@ -1,0 +1,174 @@
+body {
+  font-family: "Noto Serif Khmer", serif;
+}
+.font-koulen {
+  font-family: "Koulen", sans-serif;
+}
+.font-moul {
+  font-family: "Moul", serif;
+}
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+.slide-preview {
+  background-color: #2c3e50;
+  color: white;
+  aspect-ratio: 16 / 9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  text-align: center;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-size: 1.25rem;
+  line-height: 1.6;
+}
+.tab-btn {
+  transition: all 0.3s ease;
+}
+.tab-btn.active {
+  background-color: #3b82f6;
+  color: white;
+  border-bottom-color: transparent;
+}
+.tab-content {
+  display: none;
+}
+.tab-content.active {
+  display: block;
+}
+#loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  color: white;
+  font-size: 1.125rem;
+}
+#loading-overlay.hidden {
+  display: none !important;
+}
+.spinner {
+  border: 8px solid #f3f3f3;
+  border-top: 8px solid #3b82f6;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+/* Custom Notification */
+#notification {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 1rem 1.5rem;
+  border-radius: 0.5rem;
+  color: white;
+  font-weight: bold;
+  z-index: 10000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s, transform 0.3s;
+}
+#notification.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, -10px);
+}
+#notification.error {
+  background-color: #ef4444; /* red-500 */
+}
+#notification.success {
+  background-color: #22c55e; /* green-500 */
+}
+
+
+/* about app */
+/* Floating About Button */
+#about-btn {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+#about-btn:hover {
+  animation-play-state: paused;
+}
+
+/* About Modal Styles */
+#about-modal {
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.3s ease-out;
+}
+
+#about-modal.show {
+  display: flex !important;
+}
+
+#about-modal .bg-white {
+  animation: slideIn 0.3s ease-out;
+  transform: scale(1);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { 
+    opacity: 0;
+    transform: scale(0.9) translateY(-20px);
+  }
+  to { 
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  #about-btn {
+    bottom: 1rem;
+    right: 1rem;
+    padding: 0.875rem;
+  }
+  
+  #about-btn i {
+    font-size: 1.125rem;
+  }
+}
