@@ -2,7 +2,7 @@
 const API_KEY = "AIzaSyCkbFH8Ah9f5rSyOmZcjR1gSHkNNL7YLAA";
 let currentSlideIndex = 0;
 let allSlides = [];
-let isPTTGenerated = false;
+let isPPTGenerated = false;
 
 // DOM Elements
 const editor = document.getElementById("editor");
@@ -131,20 +131,20 @@ audioBtn.addEventListener("click", () => {
 spellCheckBtn.addEventListener("click", async () => {
   const text = editor.value.trim();
   if (!text) {
-    showNotification("សូមបញ្ចូលអត្ថបទសម្រាប់បង្កើត PTT", "error");
+    showNotification("សូមបញ្ចូលអត្ថបទសម្រាប់បង្កើត PPT", "error");
     return;
   }
-  showLoading("AI កំពុងបង្កើត PTT...");
+  showLoading("AI កំពុងបង្កើត PPT...");
   try {
-    const pttContent = await generatePTT(text);
-    editor.value = pttContent.trim();
-    isPTTGenerated = true;
+    const pptContent = await generatePPT(text);
+    editor.value = pptContent.trim();
+    isPPTGenerated = true;
     currentSlideIndex = 0;
     updatePreview();
-    showNotification("បង្កើត PTT បានជោគជ័យ!", "success");
+    showNotification("បង្កើត PPT បានជោគជ័យ!", "success");
   } catch (error) {
-    console.error("Error generating PTT:", error);
-    showNotification("មានបញ្ហាក្នុងការបង្កើត PTT។", "error");
+    console.error("Error generating PPT:", error);
+    showNotification("មានបញ្ហាក្នុងការបង្កើត PPT", "error");
   } finally {
     hideLoading();
   }
@@ -154,7 +154,7 @@ clearBtn.addEventListener("click", () => {
   if (confirm("តើអ្នកពិតជាចង់សម្អាតអត្ថបទទាំងអស់មែនទេ?")) {
     editor.value = "";
     textInput.value = "";
-    isPTTGenerated = false;
+    isPPTGenerated = false;
     currentSlideIndex = 0;
     allSlides = [];
     updatePreview();
@@ -163,16 +163,16 @@ clearBtn.addEventListener("click", () => {
 });
 
 function updatePreview() {
-  // Only show basic text preview, no slides until PTT is generated
+  // Only show basic text preview, no slides until PPT is generated
   const text = editor.value;
   previewContainer.innerHTML = "";
 
-  if (!isPTTGenerated) {
+  if (!isPPTGenerated) {
     if (text.trim()) {
       previewContainer.innerHTML = `
         <div class="text-center text-gray-500 py-16">
           <i class="fas fa-info-circle text-4xl mb-4"></i>
-          <p>សូមចុចប៊ូតុង "បង្កើត PTT" ដើម្បីមើលស្លាយ</p>
+          <p>សូមចុចប៊ូតុង "បង្កើត PPT" ដើម្បីមើលស្លាយ</p>
         </div>`;
     } else {
       previewContainer.innerHTML = `
@@ -279,24 +279,24 @@ function displayCurrentSlide(backgroundColor, textColor, fontSize) {
 }
 
 // Toggle Customization Section - Hidden by default
-const toggleCustomization = document.getElementById('toggle-customization');
-const customizationSection = document.getElementById('customization-section');
-const toggleIcon = document.getElementById('toggle-icon');
-const toggleText = document.getElementById('toggle-text');
+const toggleCustomization = document.getElementById("toggle-customization");
+const customizationSection = document.getElementById("customization-section");
+const toggleIcon = document.getElementById("toggle-icon");
+const toggleText = document.getElementById("toggle-text");
 
 let isCustomizationVisible = false; // Changed to false (hidden by default)
 
-toggleCustomization.addEventListener('click', () => {
+toggleCustomization.addEventListener("click", () => {
   isCustomizationVisible = !isCustomizationVisible;
-  
+
   if (isCustomizationVisible) {
-    customizationSection.classList.remove('collapsed');
-    toggleIcon.classList.replace('fa-chevron-down', 'fa-chevron-up');
-    toggleText.textContent = 'លាក់';
+    customizationSection.classList.remove("collapsed");
+    toggleIcon.classList.replace("fa-chevron-down", "fa-chevron-up");
+    toggleText.textContent = "លាក់";
   } else {
-    customizationSection.classList.add('collapsed');
-    toggleIcon.classList.replace('fa-chevron-up', 'fa-chevron-down');
-    toggleText.textContent = 'បង្ហាញ';
+    customizationSection.classList.add("collapsed");
+    toggleIcon.classList.replace("fa-chevron-up", "fa-chevron-down");
+    toggleText.textContent = "បង្ហាញ";
   }
 });
 
@@ -310,23 +310,23 @@ const lineSpacingEl = document.getElementById("line-spacing");
 
 if (bgColorEl)
   bgColorEl.addEventListener("change", () => {
-    if (isPTTGenerated) updateSlidePreview();
+    if (isPPTGenerated) updateSlidePreview();
   });
 if (textColorEl)
   textColorEl.addEventListener("change", () => {
-    if (isPTTGenerated) updateSlidePreview();
+    if (isPPTGenerated) updateSlidePreview();
   });
 if (fontSizeEl)
   fontSizeEl.addEventListener("change", () => {
-    if (isPTTGenerated) updateSlidePreview();
+    if (isPPTGenerated) updateSlidePreview();
   });
 if (linesPerSlideEl)
   linesPerSlideEl.addEventListener("change", () => {
-    if (isPTTGenerated) updateSlidePreview();
+    if (isPPTGenerated) updateSlidePreview();
   });
 if (lineSpacingEl)
   lineSpacingEl.addEventListener("change", () => {
-    if (isPTTGenerated) updateSlidePreview();
+    if (isPPTGenerated) updateSlidePreview();
   });
 
 downloadBtn.addEventListener("click", async () => {
@@ -453,8 +453,8 @@ async function getTextFromImage(base64ImageData) {
   return await callGeminiAPI(prompt, base64ImageData);
 }
 
-async function generatePTT(text) {
-  const prompt = `អ្នកគឺជាអ្នកជំនាញក្នុងការរៀបចំ PowerPoint ចម្រៀងនិងបទគម្ពីរ។ សូមរៀបចំអត្ថបទខាងក្រោមនេះឲ្យក្លាយជាទម្រង់ PTT ដែលអាចប្រើបានភ្លាម។ 
+async function generatePPT(text) {
+  const prompt = `អ្នកគឺជាអ្នកជំនាញក្នុងការរៀបចំ PowerPoint ចម្រៀងនិងបទគម្ពីរ។ សូមរៀបចំអត្ថបទខាងក្រោមនេះឲ្យក្លាយជាទម្រង់ PPT ដែលអាចប្រើបានភ្លាម។ 
 
     គោលការណ៍ណែនាំ៖
     - បំបែកអត្ថបទជាស្លាយតូចៗ (មួយស្លាយមួយខ្សែបទ ឬ២-៣ខ្សែ)
