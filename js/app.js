@@ -168,29 +168,29 @@ createPPTBtn.addEventListener("click", async () => {
   }
 });
 
-bibleExampleBtn.addEventListener("click", () => {
-  const examples = [
-    "យ៉ូហាន ៣:១៦",
-    "ទំនុកតម្កិត្តិ ២៣",
-    "មត្ថេវ ៥:៣-១២",
-    "១ កូរិនថូស ១៣",
-    "ភីលីព ៤:១៣",
-  ];
-  const randomExample = examples[Math.floor(Math.random() * examples.length)];
-  bibleInput.value = randomExample;
-});
+// bibleExampleBtn.addEventListener("click", () => {
+//   const examples = [
+//     "យ៉ូហាន ៣:១៦",
+//     "ទំនុកតម្កិត្តិ ២៣",
+//     "មត្ថេវ ៥:៣-១២",
+//     "១ កូរិនថូស ១៣",
+//     "ភីលីព ៤:១៣",
+//   ];
+//   const randomExample = examples[Math.floor(Math.random() * examples.length)];
+//   bibleInput.value = randomExample;
+// });
 
-songExampleBtn.addEventListener("click", () => {
-  const examples = [
-    "ចម្រៀងរៀងរាយ",
-    "ចម្រៀងប្រពៃណីខ្មែរ",
-    "ចម្រៀងបុណ្យភ្ជុំបិណ្ឌ",
-    "ចម្រៀងបុណ្យចូលឆ្នាំ",
-    "ចម្រៀងអរព្រះគុណ",
-  ];
-  const randomExample = examples[Math.floor(Math.random() * examples.length)];
-  songInput.value = randomExample;
-});
+// songExampleBtn.addEventListener("click", () => {
+//   const examples = [
+//     "ចម្រៀងរៀងរាយ",
+//     "ចម្រៀងប្រពៃណីខ្មែរ",
+//     "ចម្រៀងបុណ្យភ្ជុំបិណ្ឌ",
+//     "ចម្រៀងបុណ្យចូលឆ្នាំ",
+//     "ចម្រៀងអរព្រះគុណ",
+//   ];
+//   const randomExample = examples[Math.floor(Math.random() * examples.length)];
+//   songInput.value = randomExample;
+// });
 
 aiSearchBtn.addEventListener("click", async () => {
   const bibleQuery = bibleInput.value.trim();
@@ -371,3 +371,172 @@ document.addEventListener("keydown", (e) => {
   }
 });
 // --- End Event Listeners ---
+
+// Example data
+const bibleExamples = {
+  ចំណុះពេញនិយម: [
+    "យ៉ូហាន ៣:១៦",
+    "ទំនុកតម្កិត្តិ ២៣",
+    "១ យ៉ូហាន ៤:៨",
+    "ម៉ាធាយ ៦:៩-១៣",
+    "ភីលីព ៤:១៣",
+    "រ៉ូម ៨:២៨",
+  ],
+  ប្រធានបទ: [
+    "ស្នេហា",
+    "ក្តីសង្ឃឹម",
+    "ការអធិស្ឋាន",
+    "ការលើកទឹកចិត្ត",
+    "ភាពអត់ធ្មត់",
+    "ការអភ័យទោស",
+    "ចិត្តអំណរ",
+    "ការគោរព",
+  ],
+  សេចក្តីស្រឡាញ់: [
+    "ស្នេហាព្រះជាម្ចាស់",
+    "ស្នេហាគ្នា",
+    "ស្នេហាជាតិ",
+    "ស្នេហាឪពុកម្តាយ",
+  ],
+};
+
+const songExamples = {
+  ចម្រៀងប្រពៃណី: [
+    "រៀងរាយ",
+    "សំពះអូន",
+    "ចម្រៀងភ្នំពេញ",
+    "ចម្រៀងស្រុកស្រែ",
+    "បទកំដរសោក",
+    "ចម្រៀងអាពាហ៍ពិពាហ៍",
+  ],
+  ចម្រៀងកុមារ: [
+    "ចម្រៀងកុមារ",
+    "បទរាំកុមារ",
+    "ចម្រៀងរៀន",
+    "បទលេង",
+    "ចម្រៀងពុកម្តាយ",
+  ],
+  ចម្រៀងសាសនា: [
+    "បទត្រណម",
+    "ចម្រៀងព្រះពុទ្ធ",
+    "បទសូត្រ",
+    "ចម្រៀងធម៌",
+    "បទសុភាសិត",
+  ],
+  ចម្រៀងសម័យថ្មី: [
+    "ចម្រៀងស្នេហា",
+    "ចម្រៀងទំនុកតម្កិត្តិ",
+    "ចម្រៀងជាតិ",
+    "ចម្រៀងកំសាន្ត",
+  ],
+};
+
+// Handle examples modal
+document
+  .getElementById("bible-examples-btn")
+  .addEventListener("click", function () {
+    showExamplesModal("bible");
+  });
+
+document
+  .getElementById("song-examples-btn")
+  .addEventListener("click", function () {
+    showExamplesModal("song");
+  });
+
+document
+  .getElementById("close-examples-modal")
+  .addEventListener("click", function () {
+    hideExamplesModal();
+  });
+
+document
+  .getElementById("examples-modal")
+  .addEventListener("click", function (e) {
+    if (e.target === this) {
+      hideExamplesModal();
+    }
+  });
+
+function showExamplesModal(type) {
+  const modal = document.getElementById("examples-modal");
+  const title = document.getElementById("modal-title");
+  const content = document.getElementById("examples-content");
+
+  if (type === "bible") {
+    title.innerHTML =
+      '<i class="fas fa-book mr-2 text-blue-600"></i>ឧទាហរណ៍បទគម្ពីរ';
+    content.innerHTML = generateExamplesHTML(bibleExamples, "bible");
+  } else {
+    title.innerHTML =
+      '<i class="fas fa-music mr-2 text-green-600"></i>ឧទាហរណ៍ចម្រៀង';
+    content.innerHTML = generateExamplesHTML(songExamples, "song");
+  }
+
+  modal.classList.add("show");
+  modal.classList.remove("hidden");
+}
+
+function hideExamplesModal() {
+  const modal = document.getElementById("examples-modal");
+  modal.classList.remove("show");
+  modal.classList.add("hidden");
+}
+
+function generateExamplesHTML(examples, type) {
+  let html = "";
+
+  for (const [category, items] of Object.entries(examples)) {
+    html += `<div class="example-category ${type}">${category}</div>`;
+
+    items.forEach((item) => {
+      html += `
+        <div class="example-item ${type}" onclick="selectExample('${item}')">
+          <div class="flex items-center justify-between">
+            <span class="text-gray-800">${item}</span>
+            <i class="fas fa-copy text-gray-400 text-sm"></i>
+          </div>
+        </div>
+      `;
+    });
+  }
+
+  return html;
+}
+
+function selectExample(text) {
+  const searchInput = document.getElementById("ai-search-input");
+  searchInput.value = text;
+  searchInput.focus();
+
+  // Show notification
+  showNotification("បានចម្លង: " + text, "success");
+
+  // Close modal
+  hideExamplesModal();
+}
+
+// Update the existing radio button handler to also handle examples
+document.querySelectorAll('input[name="content-type"]').forEach((radio) => {
+  radio.addEventListener("change", function () {
+    const searchInput = document.getElementById("ai-search-input");
+    const bibleSection = document.getElementById("bible-version-section");
+    const songSection = document.getElementById("song-type-section");
+    const bibleExamples = document.getElementById("bible-examples");
+    const songExamples = document.getElementById("song-examples");
+
+    if (this.value === "bible") {
+      bibleSection.classList.remove("hidden");
+      songSection.classList.add("hidden");
+      bibleExamples.classList.remove("hidden");
+      songExamples.classList.add("hidden");
+      searchInput.placeholder = "ស្វែងរក: យ៉ូហាន ៣:១៦, ទំនុកតម្កិត្តិ ២៣...";
+    } else {
+      bibleSection.classList.add("hidden");
+      songSection.classList.remove("hidden");
+      bibleExamples.classList.add("hidden");
+      songExamples.classList.remove("hidden");
+      searchInput.placeholder = "ស្វែងរក: រៀងរាយ, សំពះអូន, ចម្រៀងកុមារ...";
+    }
+  });
+});

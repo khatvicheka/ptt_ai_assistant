@@ -200,3 +200,58 @@ body {
 /* #toggle-customization {
   transition: all 0.2s ease;
 } */
+
+
+/* Examples Modal Styles */
+#examples-modal {
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.3s ease-out;
+}
+
+#examples-modal.show {
+  display: flex !important;
+}
+
+#examples-modal .bg-white {
+  animation: slideIn 0.3s ease-out;
+}
+
+.example-item {
+  padding: 0.75rem;
+  margin: 0.25rem 0;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: white;
+}
+
+.example-item:hover {
+  background-color: #f3f4f6;
+  border-color: #3b82f6;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.example-item.bible:hover {
+  border-color: #3b82f6;
+  background-color: #eff6ff;
+}
+
+.example-item.song:hover {
+  border-color: #10b981;
+  background-color: #f0fdf4;
+}
+
+.example-category {
+  background-color: #f9fafb;
+  padding: 0.5rem 1rem;
+  margin: 1rem 0 0.5rem 0;
+  border-left: 4px solid #3b82f6;
+  font-weight: 600;
+  color: #374151;
+}
+
+.example-category.song {
+  border-left-color: #10b981;
+}

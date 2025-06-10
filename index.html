@@ -9,7 +9,8 @@
       href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤖</text></svg>">
     <!-- <script src="./libs/taiwind-css-3.4.16.js"></script> -->
     <!-- <script src="https://cdn.jsdelivr.net/gh/gitbrent/pptxgenjs/dist/pptxgen.bundle.js"></script> -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <script src="./libs/taiwind-css-3.4.16.js"></script>
     <script src="./libs/pptxgen.bundle.js"></script>
     <link
@@ -38,10 +39,16 @@
         <main class="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <!-- Left Side: Input & Editor -->
           <div class="bg-white p-6 rounded-lg shadow-lg">
-            <h2
-              class="text-2xl font-koulen border-b-2 border-blue-500 pb-2 mb-4">
-              ជំហានទី១៖ បញ្ចូលអត្ថបទ
-            </h2>
+            <div
+              class="flex justify-between items-center border-b-2 border-blue-500 pb-2 mb-4">
+              <h2 class="text-2xl font-koulen">
+                ជំហានទី១៖ បញ្ចូលអត្ថបទ
+              </h2>
+              <button id="clear-btn"
+                class="bg-gray-400 hover:bg-red-500 text-white text-sm font-medium py-1 px-3 rounded transition duration-300">
+                <i class="fas fa-eraser mr-1"></i>សម្អាត
+              </button>
+            </div>
 
             <div class="border-b border-gray-200 mb-4">
               <nav class="-mb-px flex space-x-4" aria-label="Tabs">
@@ -90,59 +97,126 @@
               </div>
 
               <div id="tab-youtube" class="tab-content">
-                <p class="text-base text-gray-600 mb-2">
+                <p class="text-base text-gray-600 mb-4">
                   សុំឲ្យ AI រកបទគម្ពីរ ឬចម្រៀងខ្មែរដែលអ្នកចង់បាន។
                 </p>
 
-                <!-- Bible Section -->
-                <div class="mb-4 p-3 bg-blue-50 rounded-lg">
-                  <h4 class="font-semibold text-blue-800 mb-2">
-                    <i class="fas fa-book mr-2"></i>បទគម្ពីរ
-                  </h4>
-                  <div class="grid grid-cols-2 gap-2 mb-2">
+                <!-- Content Type Selection -->
+                <div class="mb-4 p-3 bg-gray-50 rounded-lg">
+                  <div class="flex items-center justify-center gap-8">
+                    <label class="flex items-center cursor-pointer">
+                      <input type="radio" name="content-type" value="bible"
+                        checked
+                        class="mr-2 text-blue-600">
+                      <i class="fas fa-book mr-2 text-blue-600"></i>
+                      <span class="font-medium">បទគម្ពីរ</span>
+                    </label>
+                    <label class="flex items-center cursor-pointer">
+                      <input type="radio" name="content-type" value="song"
+                        class="mr-2 text-green-600">
+                      <i class="fas fa-music mr-2 text-green-600"></i>
+                      <span class="font-medium">ចម្រៀង</span>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Examples -->
+                <div id="examples" class="mb-4">
+                  <div id="bible-examples"
+                    class="text-base text-gray-500 bg-blue-50 p-2 rounded border border-blue-200">
+                    <div class="flex items-center justify-between">
+                      <span>
+                        <i class="fas fa-lightbulb mr-1 text-blue-600"></i>
+                        <strong>ឧទាហរណ៍:</strong> យ៉ូហាន ៣:១៦, ទំនុកតម្កិត្តិ
+                        ២៣, ស្នេហា, ក្តីសង្ឃឹម
+                      </span>
+                      <button id="bible-examples-btn"
+                        class="text-blue-600 hover:text-blue-800 font-medium">
+                        <i class="fas fa-list mr-1"></i>មើលបន្ថែម
+                      </button>
+                    </div>
+                  </div>
+
+                  <div id="song-examples"
+                    class="text-base text-gray-500 bg-green-50 p-2 rounded border border-green-200 hidden">
+                    <div class="flex items-center justify-between">
+                      <span>
+                        <i class="fas fa-lightbulb mr-1 text-green-600"></i>
+                        <strong>ឧទាហរណ៍:</strong> រៀងរាយ, សំពះអូន, ចម្រៀងកុមារ,
+                        បទត្រណម
+                      </span>
+                      <button id="song-examples-btn"
+                        class="text-green-600 hover:text-green-800 font-medium">
+                        <i class="fas fa-list mr-1"></i>មើលបន្ថែម
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Search Input -->
+                <div class="mb-4">
+                  <input type="text" id="ai-search-input"
+                    placeholder="ស្វែងរក: យ៉ូហាន ៣:១៦, ទំនុកតម្កិត្តិ ២៣..."
+                    class="w-full p-3 border border-gray-300 rounded-lg text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                </div>
+
+                <!-- Dynamic Options -->
+                <div id="dynamic-options" class="mb-4">
+                  <!-- Bible Version (shown by default) -->
+                  <div id="bible-version-section">
+                    <label
+                      class="block text-base font-medium text-gray-700 mb-2">
+                      <i class="fas fa-book-open mr-1"></i>ជ្រើសរើសកំណែបទគម្ពីរ:
+                    </label>
                     <select id="bible-version"
-                      class="p-2 border border-gray-300 rounded text-sm">
+                      class="w-full p-3 border border-gray-300 rounded-lg text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                       <option value="1954">បទគម្ពីរ ១៩៥៤</option>
                       <option value="2005">បទគម្ពីរ ២០០៥</option>
                       <option value="2016">បទគម្ពីរ ២០១៦</option>
                     </select>
-                    <button id="bible-example-btn"
-                      class="text-blue-600 hover:text-blue-800 text-sm">
-                      <i class="fas fa-lightbulb mr-1"></i>ឧទាហរណ៍
-                    </button>
                   </div>
-                  <input type="text" id="bible-input"
-                    placeholder="ឧ. យ៉ូហាន ៣:១៦ ឬ ទំនុកតម្កិត្តិ ២៣"
-                    class="w-full p-2 border border-gray-300 rounded-lg text-sm" />
-                </div>
 
-                <!-- Song Section -->
-                <div class="mb-4 p-3 bg-green-50 rounded-lg">
-                  <h4 class="font-semibold text-green-800 mb-2">
-                    <i class="fas fa-music mr-2"></i>ចម្រៀងខ្មែរ
-                  </h4>
-                  <button id="song-example-btn"
-                    class="text-green-600 hover:text-green-800 text-sm mb-2">
-                    <i class="fas fa-lightbulb mr-1"></i>ឧទាហរណ៍
-                  </button>
-                  <input type="text" id="song-input"
-                    placeholder="ឧ. ចម្រៀង រៀងរាយ ឬ ចម្រៀងប្រពៃណី"
-                    class="w-full p-2 border border-gray-300 rounded-lg text-sm" />
+                  <!-- Song Type (hidden by default) -->
+                  <div id="song-type-section" class="hidden">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                      <i class="fas fa-music mr-1"></i>ជ្រើសរើសប្រភេទចម្រៀង:
+                    </label>
+                    <select id="song-type"
+                      class="w-full p-3 border border-gray-300 rounded-lg text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                      <option value="traditional">ចម្រៀងប្រពៃណី</option>
+                      <option value="modern">ចម្រៀងសម័យថ្មី</option>
+                      <option value="folk">ចម្រៀងប្រជាប្រិយ</option>
+                      <option value="religious">ចម្រៀងសាសនា</option>
+                    </select>
+                  </div>
                 </div>
 
                 <button id="ai-search-btn"
-                  class="w-full bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300">
-                  <i class="fas fa-robot mr-2"></i>សុំឲ្យ AI រក
+                  class="w-full bg-purple-500 hover:bg-purple-600 text-white font-bold py-3 px-4 rounded-lg transition duration-300">
+                  <i class="fas fa-robot mr-2"></i>ចាប់ផ្តើមស្វែងរក
                 </button>
               </div>
             </div>
-
+           
             <hr class="my-6" />
 
             <h2
               class="text-2xl font-koulen border-b-2 border-blue-500 pb-2 mb-4">
               ជំហានទី២៖ កែសម្រួល និងពិនិត្យ
             </h2>
+            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-3 mb-4">
+              <div class="flex">
+                <div class="flex-shrink-0">
+                  <i class="fas fa-exclamation-triangle text-yellow-400"></i>
+                </div>
+                <div class="ml-3">
+                  <p class="text-sm text-yellow-700">
+                    <strong>ចំណាំសំខាន់:</strong> AI អាចធ្វើកំហុសបាន។
+                    សូមពិនិត្យនិងកែសម្រួលអត្ថបទឱ្យបានត្រឹមត្រូវមុនពេលបង្កើត PPT។
+                  </p>
+                </div>
+              </div>
+            </div>
             <p class="text-base text-gray-600 mb-2">
               កែសម្រួលអត្ថបទតាមស្លាយនីមួយៗ។ សម្រាប់បំបែកស្លាយថ្មី សូមចុច Enter
               ពីរដង។
@@ -155,10 +229,7 @@
                 class="flex-1 bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300">
                 <i class="fas fa-rocket mr-2"></i>បង្កើត PPT
               </button>
-              <button id="clear-btn"
-                class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300">
-                <i class="fas fa-trash mr-2"></i>សម្អាត
-              </button>
+            
             </div>
           </div>
 
@@ -346,12 +417,45 @@
               </div>
 
               <div class="border-t pt-4 mt-6">
-                <p class="text-center text-gray-600 text-xs">
+                <p class="text-center text-gray-600 text-base">
                   កំណែ 1.0.0 | © 2025<br>
                   <span class="text-blue-600">រៀបចំដោយ : ខាត់ វិច្ឆិកា</span>
                 </p>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Examples Popup Modal -->
+      <div id="examples-modal"
+        class="fixed inset-0 bg-black bg-opacity-50 z-[9999] hidden items-center justify-center p-4">
+        <div
+          class="bg-white rounded-lg max-w-2xl w-full max-h-[80vh] overflow-hidden relative">
+          <!-- Modal Header -->
+          <div class="flex items-center justify-between p-4 border-b">
+            <h3 id="modal-title" class="text-lg font-semibold text-gray-800">
+              <i class="fas fa-book mr-2 text-blue-600"></i>ឧទាហរណ៍បទគម្ពីរ
+            </h3>
+            <button id="close-examples-modal"
+              class="text-gray-500 hover:text-gray-700 text-xl">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+
+          <!-- Modal Content -->
+          <div class="p-4 overflow-y-auto max-h-[60vh]">
+            <div id="examples-content">
+              <!-- Content will be populated by JavaScript -->
+            </div>
+          </div>
+
+          <!-- Modal Footer -->
+          <div class="p-4 border-t bg-gray-50">
+            <p class="text-sm text-gray-600 text-center">
+              <i class="fas fa-info-circle mr-1"></i>
+              ចុចលើឧទាហរណ៍ណាមួយដើម្បីចម្លងទៅកាន់ការស្វែងរក
+            </p>
           </div>
         </div>
       </div>
