@@ -1,20 +1,23 @@
 <!DOCTYPE html>
 <html lang="km">
+
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title> AI ជំនួយការ PPT</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script
-      src="https://cdn.jsdelivr.net/gh/gitbrent/pptxgenjs/dist/pptxgen.bundle.js"></script>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤖</text></svg>">
+    <!-- <script src="./libs/taiwind-css-3.4.16.js"></script> -->
+    <!-- <script src="https://cdn.jsdelivr.net/gh/gitbrent/pptxgenjs/dist/pptxgen.bundle.js"></script> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <script src="./libs/taiwind-css-3.4.16.js"></script>
+    <script src="./libs/pptxgen.bundle.js"></script>
     <link
       href="https://fonts.googleapis.com/css2?family=Koulen&family=Moul&family=Noto+Serif+Khmer:wght@400;700&display=swap"
       rel="stylesheet" />
     <link rel="stylesheet" href="./css/app.css">
   </head>
+
   <body class="bg-gray-100 text-gray-800">
     <div id="loading-overlay" class="hidden">
       <div class="spinner"></div>
@@ -55,7 +58,7 @@
                 <button
                   class="tab-btn whitespace-nowrap py-3 px-4 border-b-2 font-medium text-base"
                   data-tab="youtube">
-                  <i class="fas fa-spell-check mr-2"></i>ពិនិត្យ​ ​អក្ខរាវិរុទ្ធ
+                  <i class="fas fa-robot mr-2"></i>សួរ AI
                 </button>
               </nav>
             </div>
@@ -65,13 +68,9 @@
                 <p class="text-base text-gray-600 mb-2">
                   ជ្រើសរើសរូបភាពដែលមានអត្ថបទ (ចម្រៀង, បទគម្ពីរ)។
                 </p>
-                <input
-                  type="file"
-                  id="image-input"
-                  accept="image/*"
+                <input type="file" id="image-input" accept="image/*"
                   class="block w-full text-base text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-base file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
-                <button
-                  id="image-process-btn"
+                <button id="image-process-btn"
                   class="mt-3 w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300">
                   <i class="fas fa-cogs mr-2"></i>ចាប់ផ្តើមទាញយកអត្ថបទ
                 </button>
@@ -80,35 +79,61 @@
                 <p class="text-base text-gray-600 mb-2">
                   ចុចប៊ូតុងខាងក្រោម ហើយចាប់ផ្តើមនិយាយ ឬចាក់ចម្រៀង។
                 </p>
-                <button
-                  id="audio-btn"
+                <button id="audio-btn"
                   class="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-4 rounded-lg transition duration-300 flex items-center justify-center">
                   <i id="audio-icon" class="fas fa-microphone-alt text-2xl"></i>
                   <span id="audio-text"
                     class="ml-3 text-xl">ចាប់ផ្តើមថតសំឡេង</span>
                 </button>
-                <p
-                  id="audio-status"
+                <p id="audio-status"
                   class="text-center mt-2 text-base text-gray-500"></p>
               </div>
+
               <div id="tab-youtube" class="tab-content">
                 <p class="text-base text-gray-600 mb-2">
-                  បិទភ្ជាប់តំណភ្ជាប់ YouTube វីដេអូចម្រៀង។
+                  សុំឲ្យ AI រកបទគម្ពីរ ឬចម្រៀងខ្មែរដែលអ្នកចង់បាន។
                 </p>
-                <input
-                  type="text"
-                  id="youtube-link"
-                  placeholder="https://www.youtube.com/watch?v=..."
-                  class="w-full p-2 border border-gray-300 rounded-lg" />
-                <button
-                  disabled
-                  class="mt-3 w-full bg-gray-400 text-white font-bold py-2 px-4 rounded-lg cursor-not-allowed">
-                  <i class="fas fa-cogs mr-2"></i>ទាញយក
-                  (មុខងារនេះនឹងមានឆាប់ៗនេះ)
+
+                <!-- Bible Section -->
+                <div class="mb-4 p-3 bg-blue-50 rounded-lg">
+                  <h4 class="font-semibold text-blue-800 mb-2">
+                    <i class="fas fa-book mr-2"></i>បទគម្ពីរ
+                  </h4>
+                  <div class="grid grid-cols-2 gap-2 mb-2">
+                    <select id="bible-version"
+                      class="p-2 border border-gray-300 rounded text-sm">
+                      <option value="1954">បទគម្ពីរ ១៩៥៤</option>
+                      <option value="2005">បទគម្ពីរ ២០០៥</option>
+                      <option value="2016">បទគម្ពីរ ២០១៦</option>
+                    </select>
+                    <button id="bible-example-btn"
+                      class="text-blue-600 hover:text-blue-800 text-sm">
+                      <i class="fas fa-lightbulb mr-1"></i>ឧទាហរណ៍
+                    </button>
+                  </div>
+                  <input type="text" id="bible-input"
+                    placeholder="ឧ. យ៉ូហាន ៣:១៦ ឬ ទំនុកតម្កិត្តិ ២៣"
+                    class="w-full p-2 border border-gray-300 rounded-lg text-sm" />
+                </div>
+
+                <!-- Song Section -->
+                <div class="mb-4 p-3 bg-green-50 rounded-lg">
+                  <h4 class="font-semibold text-green-800 mb-2">
+                    <i class="fas fa-music mr-2"></i>ចម្រៀងខ្មែរ
+                  </h4>
+                  <button id="song-example-btn"
+                    class="text-green-600 hover:text-green-800 text-sm mb-2">
+                    <i class="fas fa-lightbulb mr-1"></i>ឧទាហរណ៍
+                  </button>
+                  <input type="text" id="song-input"
+                    placeholder="ឧ. ចម្រៀង រៀងរាយ ឬ ចម្រៀងប្រពៃណី"
+                    class="w-full p-2 border border-gray-300 rounded-lg text-sm" />
+                </div>
+
+                <button id="ai-search-btn"
+                  class="w-full bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300">
+                  <i class="fas fa-robot mr-2"></i>សុំឲ្យ AI រក
                 </button>
-                <p class="text-base text-center mt-2 text-gray-500">
-                  ដោយសារបញ្ហាបច្ចេកទេស មុខងារនេះមិនទាន់អាចប្រើបានទេ។
-                </p>
               </div>
             </div>
 
@@ -122,19 +147,15 @@
               កែសម្រួលអត្ថបទតាមស្លាយនីមួយៗ។ សម្រាប់បំបែកស្លាយថ្មី សូមចុច Enter
               ពីរដង។
             </p>
-            <textarea
-              id="editor"
-              rows="15"
+            <textarea id="editor" rows="15"
               class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
               placeholder="អត្ថបទដែលបានទាញយកនឹងបង្ហាញនៅទីនេះ..."></textarea>
             <div class="flex gap-2 mt-3">
-              <button
-                id="spell-check-btn"
+              <button id="create-ppt-btn"
                 class="flex-1 bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300">
                 <i class="fas fa-rocket mr-2"></i>បង្កើត PPT
               </button>
-              <button
-                id="clear-btn"
+              <button id="clear-btn"
                 class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300">
                 <i class="fas fa-trash mr-2"></i>សម្អាត
               </button>
@@ -262,8 +283,7 @@
               </p>
             </div>
 
-            <button
-              id="download-btn"
+            <button id="download-btn"
               class="w-full bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300">
               <i class="fas fa-download mr-2"></i>ទាញយកជា PowerPoint (.pptx)
             </button>
@@ -291,7 +311,7 @@
           <!-- Modal Content -->
           <div class="p-6">
             <div class="text-center mb-6">
-              <i class="fa-brands fa-airbnb text-4xl text-blue-600 mb-4"></i>
+              <i class="fas fa-robot text-4xl text-blue-600 mb-4"></i>
               <h2 class="text-2xl font-moul text-blue-600 mb-2">AI ជំនួយការ
                 PPT</h2>
               <p
@@ -336,6 +356,9 @@
         </div>
       </div>
 
+      <script src="./js/apiUtils.js"></script>
+      <script src="./js/utils.js"></script>
       <script src="./js/app.js"></script>
     </body>
+
   </html>

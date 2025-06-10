@@ -1,8 +1,8 @@
-// Gemini API Configuration
-const API_KEY = "AIzaSyCkbFH8Ah9f5rSyOmZcjR1gSHkNNL7YLAA";
+//variables
 let currentSlideIndex = 0;
 let allSlides = [];
 let isPPTGenerated = false;
+let isCustomizationVisible = false;
 
 // DOM Elements
 const editor = document.getElementById("editor");
@@ -13,12 +13,33 @@ const audioBtn = document.getElementById("audio-btn");
 const audioIcon = document.getElementById("audio-icon");
 const audioText = document.getElementById("audio-text");
 const audioStatus = document.getElementById("audio-status");
-const spellCheckBtn = document.getElementById("spell-check-btn");
+const createPPTBtn = document.getElementById("create-ppt-btn");
 const downloadBtn = document.getElementById("download-btn");
 const loadingOverlay = document.getElementById("loading-overlay");
 const loadingText = document.getElementById("loading-text");
 const notification = document.getElementById("notification");
 const clearBtn = document.getElementById("clear-btn");
+const aiSearchBtn = document.getElementById("ai-search-btn");
+const bibleInput = document.getElementById("bible-input");
+const songInput = document.getElementById("song-input");
+const bibleVersion = document.getElementById("bible-version");
+const bibleExampleBtn = document.getElementById("bible-example-btn");
+const songExampleBtn = document.getElementById("song-example-btn");
+const toggleCustomization = document.getElementById("toggle-customization");
+const customizationSection = document.getElementById("customization-section");
+const toggleIcon = document.getElementById("toggle-icon");
+const toggleText = document.getElementById("toggle-text");
+const bgColorEl = document.getElementById("bg-color");
+const textColorEl = document.getElementById("text-color");
+const fontSizeEl = document.getElementById("font-size");
+const linesPerSlideEl = document.getElementById("lines-per-slide");
+const lineSpacingEl = document.getElementById("line-spacing");
+const tabs = document.querySelectorAll(".tab-btn");
+const tabContents = document.querySelectorAll(".tab-content");
+// About Modal Functionality
+const aboutBtn = document.getElementById("about-btn");
+const aboutModal = document.getElementById("about-modal");
+const closeAbout = document.getElementById("close-about");
 
 // Speech Recognition
 const SpeechRecognition =
@@ -74,9 +95,6 @@ if (SpeechRecognition) {
 }
 
 // --- Event Listeners ---
-
-const tabs = document.querySelectorAll(".tab-btn");
-const tabContents = document.querySelectorAll(".tab-content");
 tabs.forEach((tab) => {
   tab.addEventListener("click", () => {
     tabs.forEach((item) => item.classList.remove("active"));
@@ -128,7 +146,7 @@ audioBtn.addEventListener("click", () => {
   }
 });
 
-spellCheckBtn.addEventListener("click", async () => {
+createPPTBtn.addEventListener("click", async () => {
   const text = editor.value.trim();
   if (!text) {
     showNotification("សូមបញ្ចូលអត្ថបទសម្រាប់បង្កើត PPT", "error");
@@ -150,10 +168,70 @@ spellCheckBtn.addEventListener("click", async () => {
   }
 });
 
+bibleExampleBtn.addEventListener("click", () => {
+  const examples = [
+    "យ៉ូហាន ៣:១៦",
+    "ទំនុកតម្កិត្តិ ២៣",
+    "មត្ថេវ ៥:៣-១២",
+    "១ កូរិនថូស ១៣",
+    "ភីលីព ៤:១៣",
+  ];
+  const randomExample = examples[Math.floor(Math.random() * examples.length)];
+  bibleInput.value = randomExample;
+});
+
+songExampleBtn.addEventListener("click", () => {
+  const examples = [
+    "ចម្រៀងរៀងរាយ",
+    "ចម្រៀងប្រពៃណីខ្មែរ",
+    "ចម្រៀងបុណ្យភ្ជុំបិណ្ឌ",
+    "ចម្រៀងបុណ្យចូលឆ្នាំ",
+    "ចម្រៀងអរព្រះគុណ",
+  ];
+  const randomExample = examples[Math.floor(Math.random() * examples.length)];
+  songInput.value = randomExample;
+});
+
+aiSearchBtn.addEventListener("click", async () => {
+  const bibleQuery = bibleInput.value.trim();
+  const songQuery = songInput.value.trim();
+  const selectedVersion = bibleVersion.value;
+
+  if (!bibleQuery && !songQuery) {
+    showNotification("សូមបញ្ចូលសំណើរបស់អ្នក", "error");
+    return;
+  }
+
+  showLoading("AI កំពុងស្វែងរក...");
+
+  try {
+    let result = "";
+
+    if (bibleQuery) {
+      result += await searchBibleVerse(bibleQuery, selectedVersion);
+    }
+
+    if (songQuery) {
+      if (result) result += "\n\n";
+      result += await searchKhmerSong(songQuery);
+    }
+
+    editor.value = result;
+    showNotification("AI បានរកឃើញហើយ!", "success");
+  } catch (error) {
+    console.error("Error in AI search:", error);
+    showNotification("មានបញ្ហាក្នុងការស្វែងរក", "error");
+  } finally {
+    hideLoading();
+  }
+});
+
 clearBtn.addEventListener("click", () => {
   if (confirm("តើអ្នកពិតជាចង់សម្អាតអត្ថបទទាំងអស់មែនទេ?")) {
     editor.value = "";
     textInput.value = "";
+    bibleInput.value = "";
+    songInput.value = "";
     isPPTGenerated = false;
     currentSlideIndex = 0;
     allSlides = [];
@@ -162,129 +240,7 @@ clearBtn.addEventListener("click", () => {
   }
 });
 
-function updatePreview() {
-  // Only show basic text preview, no slides until PPT is generated
-  const text = editor.value;
-  previewContainer.innerHTML = "";
-
-  if (!isPPTGenerated) {
-    if (text.trim()) {
-      previewContainer.innerHTML = `
-        <div class="text-center text-gray-500 py-16">
-          <i class="fas fa-info-circle text-4xl mb-4"></i>
-          <p>សូមចុចប៊ូតុង "បង្កើត PPT" ដើម្បីមើលស្លាយ</p>
-        </div>`;
-    } else {
-      previewContainer.innerHTML = `
-        <p class="text-center text-gray-500 py-16">
-          ផ្ទាំងមើលស្លាយនឹងបង្ហាញនៅទីនេះ...
-        </p>`;
-    }
-    return;
-  }
-
-  updateSlidePreview();
-}
-
-function updateSlidePreview() {
-  const text = editor.value;
-  const linesPerSlide = parseInt(
-    document.getElementById("lines-per-slide").value
-  );
-  const backgroundColor = document.getElementById("bg-color").value;
-  const textColor = document.getElementById("text-color").value;
-  const fontSize = document.getElementById("font-size").value;
-
-  // Split text into slides based on lines per slide setting
-  const lines = text.split("\n").filter((line) => line.trim() !== "");
-  allSlides = [];
-
-  for (let i = 0; i < lines.length; i += linesPerSlide) {
-    const slideLines = lines.slice(i, i + linesPerSlide);
-    allSlides.push(slideLines.join("\n"));
-  }
-
-  if (currentSlideIndex >= allSlides.length) {
-    currentSlideIndex = 0;
-  }
-
-  displayCurrentSlide(backgroundColor, textColor, fontSize);
-}
-
-function displayCurrentSlide(backgroundColor, textColor, fontSize) {
-  previewContainer.innerHTML = "";
-  const lineSpacing = document.getElementById("line-spacing")?.value || "1.5";
-
-  if (allSlides.length === 0) {
-    previewContainer.innerHTML = `
-      <div class="text-center text-gray-500 py-16">
-        <p>គ្មានស្លាយសម្រាប់បង្ហាញ</p>
-      </div>`;
-    return;
-  }
-
-  const slideWrapper = document.createElement("div");
-  slideWrapper.className = "relative";
-
-  // Slide content
-  const slideDiv = document.createElement("div");
-  slideDiv.className = "slide-preview";
-  slideDiv.style.backgroundColor = backgroundColor;
-  slideDiv.style.color = textColor;
-  slideDiv.style.fontSize = fontSize;
-  slideDiv.style.lineHeight = lineSpacing;
-  slideDiv.textContent = allSlides[currentSlideIndex].trim();
-
-  // Navigation controls
-  const navWrapper = document.createElement("div");
-  navWrapper.className = "flex justify-between items-center mt-4";
-
-  const prevBtn = document.createElement("button");
-  prevBtn.className =
-    "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition duration-300 disabled:bg-gray-300";
-  prevBtn.innerHTML = '<i class="fas fa-chevron-left mr-2"></i>មុន';
-  prevBtn.disabled = currentSlideIndex === 0;
-  prevBtn.addEventListener("click", () => {
-    if (currentSlideIndex > 0) {
-      currentSlideIndex--;
-      displayCurrentSlide(backgroundColor, textColor, fontSize);
-    }
-  });
-
-  const slideInfo = document.createElement("div");
-  slideInfo.className = "text-center";
-  slideInfo.innerHTML = `<span class="text-gray-600">ស្លាយ ${
-    currentSlideIndex + 1
-  } ក្នុងចំណោម ${allSlides.length}</span>`;
-
-  const nextBtn = document.createElement("button");
-  nextBtn.className =
-    "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition duration-300 disabled:bg-gray-300";
-  nextBtn.innerHTML = 'បន្ទាប់<i class="fas fa-chevron-right ml-2"></i>';
-  nextBtn.disabled = currentSlideIndex === allSlides.length - 1;
-  nextBtn.addEventListener("click", () => {
-    if (currentSlideIndex < allSlides.length - 1) {
-      currentSlideIndex++;
-      displayCurrentSlide(backgroundColor, textColor, fontSize);
-    }
-  });
-
-  navWrapper.appendChild(prevBtn);
-  navWrapper.appendChild(slideInfo);
-  navWrapper.appendChild(nextBtn);
-
-  slideWrapper.appendChild(slideDiv);
-  slideWrapper.appendChild(navWrapper);
-  previewContainer.appendChild(slideWrapper);
-}
-
 // Toggle Customization Section - Hidden by default
-const toggleCustomization = document.getElementById("toggle-customization");
-const customizationSection = document.getElementById("customization-section");
-const toggleIcon = document.getElementById("toggle-icon");
-const toggleText = document.getElementById("toggle-text");
-
-let isCustomizationVisible = false; // Changed to false (hidden by default)
 
 toggleCustomization.addEventListener("click", () => {
   isCustomizationVisible = !isCustomizationVisible;
@@ -299,14 +255,6 @@ toggleCustomization.addEventListener("click", () => {
     toggleText.textContent = "បង្ហាញ";
   }
 });
-
-// Add event listeners for customization controls
-// Add event listeners with null checks
-const bgColorEl = document.getElementById("bg-color");
-const textColorEl = document.getElementById("text-color");
-const fontSizeEl = document.getElementById("font-size");
-const linesPerSlideEl = document.getElementById("lines-per-slide");
-const lineSpacingEl = document.getElementById("line-spacing");
 
 if (bgColorEl)
   bgColorEl.addEventListener("change", () => {
@@ -400,122 +348,12 @@ downloadBtn.addEventListener("click", async () => {
   }
 });
 
-// --- Core Functions ---
-
-async function callGeminiAPI(prompt, base64Image = null) {
-  const model = "gemini-2.0-flash";
-  const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${API_KEY}`;
-
-  let parts = [{ text: prompt }];
-  if (base64Image) {
-    parts.push({
-      inlineData: { mimeType: "image/jpeg", data: base64Image },
-    });
-  }
-
-  const payload = { contents: [{ parts: parts }] };
-
-  const response = await fetch(apiUrl, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
-
-  if (!response.ok) {
-    const errorBody = await response.text();
-    throw new Error(
-      `API Error: ${response.status} ${response.statusText}\n${errorBody}`
-    );
-  }
-
-  const result = await response.json();
-  if (result.candidates && result.candidates[0]?.content?.parts?.[0]?.text) {
-    return result.candidates[0].content.parts[0].text;
-  } else {
-    throw new Error("API response was empty or invalid.");
-  }
-}
-
-async function getTextFromImage(base64ImageData) {
-  const prompt = `សូមវិភាគរូបភាពនេះ៖
-
-    បើរូបភាពនេះមាន៖
-    - អក្សរខ្មែរ៖ ទាញយកអត្ថបទជាភាសាខ្មែរទាំងអស់
-    - តន្ត្រី/ផ្ទាំងចម្រៀង៖ ទាញយកតែពាក្យចម្រៀងជាភាសាខ្មែរ (មិនរាប់បញ្ចូលកូដតន្ត្រី A, B, C, D, E, F, G ឬលេខផ្សេងៗ)
-    - ទាំងតន្ត្រីទាំងអត្ថបទ៖ ទាញយកតែអត្ថបទភាសាខ្មែរ
-
-    គោលការណ៍៖
-    - រក្សាទម្រង់ចុះបន្ទាត់ដូចក្នុងរូបភាព
-    - ទាញយកតែពាក្យ/អត្ថបទភាសាខ្មែរ
-    - មិនរាប់បញ្ចូលកូដតន្ត្រី, លេខ, ឬសញ្ញាតន្ត្រីទេ
-    - បើគ្មានអក្សរខ្មែរ ឆ្លើយ "រកមិនឃើញអក្សរខ្មែរ"`;
-
-  return await callGeminiAPI(prompt, base64ImageData);
-}
-
-async function generatePPT(text) {
-  const prompt = `អ្នកគឺជាអ្នកជំនាញក្នុងការរៀបចំ PowerPoint ចម្រៀងនិងបទគម្ពីរ។ សូមរៀបចំអត្ថបទខាងក្រោមនេះឲ្យក្លាយជាទម្រង់ PPT ដែលអាចប្រើបានភ្លាម។ 
-
-    គោលការណ៍ណែនាំ៖
-    - បំបែកអត្ថបទជាស្លាយតូចៗ (មួយស្លាយមួយខ្សែបទ ឬ២-៣ខ្សែ)
-    - រៀបចំឲ្យងាយស្រួលអាន
-    - ប្រើការដកឃ្លាពីរដងសម្រាប់បំបែកស្លាយ
-    - រក្សាអត្ថន័យដើម
-    - ធ្វើឲ្យសមរម្យសម្រាប់បង្ហាញក្នុងព្រះវិហារ
-    - កុំបន្ថែមលេខស្លាយ (ស្លាយទី១, ស្លាយទី២) ទេ
-    - ឆ្លើយតែអត្ថបទដែលបានរៀបចំប៉ុណ្ណោះ
-
-    អត្ថបទដើម៖
-    ---
-    ${text}`;
-
-  return await callGeminiAPI(prompt);
-}
-
-// async function getSpellCheck(text) {
-//   const prompt = `អ្នកគឺជាអ្នកជំនាញភាសាខ្មែរ។ សូមពិនិត្យ និងកែតម្រូវអក្ខរាវិរុទ្ធ រួមទាំងដកឃ្លាផងដែរ នៅក្នុងអត្ថបទខាងក្រោមនេះ។ សំខាន់ណាស់៖ សូមរក្សាទម្រង់ដើមរបស់អត្ថបទ (ការចុះបន្ទាត់ និងការដកឃ្លាចន្លោះស្លាយ) ឲ្យបានពិតប្រាកដ។ ឆ្លើយតែអត្ថបទដែលបានកែរួចប៉ុណ្ណោះ។\n\nអត្ថបទសម្រាប់ពិនិត្យ៖\n---\n${text}`;
-//   return await callGeminiAPI(prompt);
-// }
-
-function showLoading(message) {
-  loadingText.textContent = message;
-  loadingOverlay.classList.remove("hidden");
-}
-
-function hideLoading() {
-  loadingOverlay.classList.add("hidden");
-}
-
-let notificationTimeout;
-function showNotification(message, type = "error") {
-  notification.textContent = message;
-  notification.className = ""; // Clear classes
-  notification.classList.add("show", type);
-
-  clearTimeout(notificationTimeout);
-  notificationTimeout = setTimeout(() => {
-    notification.classList.remove("show");
-  }, 3000); // Hide after 3 seconds
-}
-
-// About Modal Functionality
-const aboutBtn = document.getElementById("about-btn");
-const aboutModal = document.getElementById("about-modal");
-const closeAbout = document.getElementById("close-about");
-
 // Show modal
 aboutBtn.addEventListener("click", () => {
   aboutModal.classList.remove("hidden");
   aboutModal.classList.add("show");
   document.body.style.overflow = "hidden"; // Prevent background scrolling
 });
-
-// Close modal
-function closeAboutModal() {
-  aboutModal.classList.add("hidden");
-  aboutModal.classList.remove("show");
-  document.body.style.overflow = "auto"; // Restore scrolling
-}
 
 closeAbout.addEventListener("click", closeAboutModal);
 
@@ -532,3 +370,4 @@ document.addEventListener("keydown", (e) => {
     closeAboutModal();
   }
 });
+// --- End Event Listeners ---
